@@ -76,7 +76,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                       child: Center(
-                        child: Text('🐱', style: TextStyle(fontSize: 32)),
+                        child: Text('🐱', style: const TextStyle(fontSize: 32)),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -85,7 +85,7 @@ class HomeScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Deja de comer completos!!¡',
+                            '¡Deja de comer completos!',
                             style: AppTextStyles.bodyBold,
                           ),
                           Text('O MORIRE 💀', style: AppTextStyles.caption),
