@@ -5,21 +5,22 @@ import '../styles/text_styles.dart';
 class BudgetCard extends StatelessWidget {
   final String label;
   final IconData icon;
-  final double amount;
-  final String subtitle;
+  final double? amount;
+  final String? subtitle;
 
   const BudgetCard({
     super.key,
     required this.label,
     required this.icon,
-    required this.amount,
-    required this.subtitle,
+    this.amount,
+    this.subtitle,
   });
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
+        height: 100,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -28,6 +29,7 @@ class BudgetCard extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
               children: [
@@ -36,13 +38,21 @@ class BudgetCard extends StatelessWidget {
                 Text(label, style: AppTextStyles.caption),
               ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              '\$${amount.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}',
-              style: AppTextStyles.heading3,
-            ),
-            const SizedBox(height: 4),
-            Text(subtitle, style: AppTextStyles.caption),
+            if (amount != null)
+              Text(
+                '\$${amount!.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}',
+                style: AppTextStyles.heading3,
+              )
+            else if (subtitle != null)
+              Text(
+                subtitle!,
+                style: AppTextStyles.caption.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                ),
+              )
+            else
+              const SizedBox.shrink(),
           ],
         ),
       ),
