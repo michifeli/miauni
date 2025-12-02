@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   // Colores principales
-  static const Color primaryBeige = Color(0xFFFFF4E6);
+  static const Color primaryBeige = Color(0xFFFFF7ED);
   static const Color mintGreen = Color(0xFFB8E6D5);
   static const Color darkGreen = Color(0xFF2D5F4F);
-  static const Color coral = Color(0xFFFF8A80);
-  static const Color teal = Color(0xFF4DD4AC);
+  static const Color coral = Color(0xFFFF6B6B);
+  static const Color teal = Color(0xFF34D399);
 
   // Colores de texto
   static const Color textPrimary = Color(0xFF2C2C2C);
