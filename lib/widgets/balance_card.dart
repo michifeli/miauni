@@ -6,14 +6,12 @@ class BalanceCard extends StatelessWidget {
   final double balance;
   final double income;
   final double expense;
-  final int daysLeft;
 
   const BalanceCard({
     super.key,
     required this.balance,
     required this.income,
     required this.expense,
-    required this.daysLeft,
   });
 
   @override
@@ -29,37 +27,7 @@ class BalanceCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const SizedBox(width: 60),
-              const Text('Balance del mes', style: AppTextStyles.balanceTitle),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: AppColors.borderDark, width: 2),
-                ),
-                child: Row(
-                  children: [
-                    const Text('🔥', style: TextStyle(fontSize: 12)),
-                    const SizedBox(width: 4),
-                    Text(
-                      '$daysLeft días',
-                      style: AppTextStyles.caption.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+          const Text('Balance del mes', style: AppTextStyles.balanceTitle),
           const SizedBox(height: 12),
           Text(
             '\$${balance.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}',

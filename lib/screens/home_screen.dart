@@ -40,17 +40,36 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ],
                   ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: AppColors.borderDark, width: 2),
+                    ),
+                    child: Row(
+                      children: [
+                        const Text('🔥', style: TextStyle(fontSize: 14)),
+                        const SizedBox(width: 4),
+                        Text(
+                          '5 días',
+                          style: AppTextStyles.caption.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 24),
 
               // Balance Card
-              const BalanceCard(
-                balance: 27000,
-                income: 30000,
-                expense: 30000,
-                daysLeft: 5,
-              ),
+              const BalanceCard(balance: 27000, income: 30000, expense: 30000),
               const SizedBox(height: 24),
 
               // Pixel Cat Message
@@ -62,35 +81,29 @@ class HomeScreen extends StatelessWidget {
                   border: Border.all(color: AppColors.borderDark, width: 2),
                 ),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Pixel cat image (usando un placeholder por ahora)
-                    Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        color: AppColors.mintGreen,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: AppColors.borderDark,
-                          width: 2,
-                        ),
-                      ),
-                      child: Center(
-                        child: Text('🐱', style: const TextStyle(fontSize: 32)),
-                      ),
-                    ),
+                    // Pixel cat emoji sin fondo
+                    const Text('🐱', style: TextStyle(fontSize: 40)),
                     const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '¡Deja de comer completos!',
-                            style: AppTextStyles.bodyBold,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          '¡Empieza a ahorrar!',
+                          style: AppTextStyles.bodyBold.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textPrimary,
                           ),
-                          Text('O MORIRE 💀', style: AppTextStyles.caption),
-                        ],
-                      ),
+                        ),
+                        Text(
+                          'O ME VOY A MORIR 💀',
+                          style: AppTextStyles.caption.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -124,13 +137,11 @@ class HomeScreen extends StatelessWidget {
                     label: 'Presupuesto',
                     icon: Icons.anchor,
                     amount: 300000,
-                    subtitle: '2 movimientos',
                   ),
                   const SizedBox(width: 12),
                   BudgetCard(
                     label: 'Este mes',
                     icon: Icons.calendar_today,
-                    amount: 0,
                     subtitle: '2 movimientos',
                   ),
                 ],
