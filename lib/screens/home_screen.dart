@@ -40,7 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
         final monthBalance = provider.currentMonthBalance;
         final monthIncome = provider.currentMonthIncome;
         final monthExpense = provider.currentMonthExpense;
-        final transactionsCount = provider.currentMonthTransactions.length;
 
         return SingleChildScrollView(
           child: Padding(
