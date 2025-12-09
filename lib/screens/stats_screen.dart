@@ -21,14 +21,14 @@ class StatsScreen extends StatelessWidget {
                 Text('Estadísticas', style: AppTextStyles.heading2),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
             Text(
-              'Diciembre 2025',
+              'diciembre 2025',
               style: AppTextStyles.caption.copyWith(
                 color: AppColors.textSecondary,
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
 
             // Estadísticas Cards - Top Row
             Row(
@@ -85,7 +85,7 @@ class StatsScreen extends StatelessWidget {
             // Gastos por Categoría
             Row(
               children: [
-                const Text('📊', style: TextStyle(fontSize: 20)),
+                const Text('📊', style: TextStyle(fontSize: 18)),
                 const SizedBox(width: 8),
                 Text('Gastos por Categoría', style: AppTextStyles.heading3),
               ],
@@ -163,7 +163,7 @@ class StatsScreen extends StatelessWidget {
             // Últimos 7 días
             Row(
               children: [
-                const Text('📈', style: TextStyle(fontSize: 20)),
+                const Text('📈', style: TextStyle(fontSize: 18)),
                 const SizedBox(width: 8),
                 Text('Últimos 7 días', style: AppTextStyles.heading3),
               ],
@@ -197,7 +197,7 @@ class StatsScreen extends StatelessWidget {
             // Metas de Ahorro
             Row(
               children: [
-                const Text('🎯', style: TextStyle(fontSize: 20)),
+                const Text('🎯', style: TextStyle(fontSize: 18)),
                 const SizedBox(width: 8),
                 Text('Metas de Ahorro', style: AppTextStyles.heading3),
               ],
