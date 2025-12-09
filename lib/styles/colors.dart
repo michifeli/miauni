@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 class AppColors {
   // Colores principales
   static const Color primaryBeige = Color(0xFFFFF7ED);
-  static const Color mintGreen = Color(0xFFB8E6D5);
-  static const Color darkGreen = Color(0xFF2D5F4F);
+  static const Color mintGreen = Color(0xFFD1FAE5);
+  static const Color darkGreen = Color(0xFF047857);
   static const Color coral = Color(0xFFFF6B6B);
   static const Color teal = Color(0xFF34D399);
 
   // Colores de texto
-  static const Color textPrimary = Color(0xFF2C2C2C);
-  static const Color textSecondary = Color(0xFF666666);
+  static const Color textPrimary = Color(0xFF1A1A1A);
+  static const Color textSecondary = Color(0xFF777777);
   static const Color textLight = Color(0xFF999999);
 
   // Colores de fondo
@@ -22,5 +22,5 @@ class AppColors {
   static const Color expense = coral;
 
   // Colores de bordes
-  static const Color borderDark = Color(0xFF2C2C2C);
+  static const Color borderDark = Color(0xFF1A1A1A);
 }
