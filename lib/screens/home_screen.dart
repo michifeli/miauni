@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/transaction.dart';
+import '../providers/transactions_provider.dart';
 import '../styles/colors.dart';
 import '../styles/text_styles.dart';
 import '../widgets/balance_card.dart';
 import '../widgets/action_button.dart';
-import '../widgets/budget_card.dart';
 import 'stats_screen.dart';
 import 'history_screen.dart';
+import 'add_transaction_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -25,171 +28,162 @@ class _HomeScreenState extends State<HomeScreen> {
         return const StatsScreen();
       case 2:
         return const HistoryScreen();
-      case 3:
-        return _buildPlaceholderScreen('Perfil', '👤');
       default:
         return _buildHomeContent();
     }
   }
 
-  Widget _buildPlaceholderScreen(String title, String emoji) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(emoji, style: const TextStyle(fontSize: 64)),
-          const SizedBox(height: 16),
-          Text(title, style: AppTextStyles.heading2),
-          const SizedBox(height: 8),
-          Text(
-            'Próximamente...',
-            style: AppTextStyles.caption.copyWith(
-              color: AppColors.textSecondary,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildHomeContent() {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Consumer<TransactionsProvider>(
+      builder: (context, provider, child) {
+        final currentStreak = provider.currentStreak;
+        final monthBalance = provider.currentMonthBalance;
+        final monthIncome = provider.currentMonthIncome;
+        final monthExpense = provider.currentMonthExpense;
+        final transactionsCount = provider.currentMonthTransactions.length;
+
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Header
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('🏠', style: TextStyle(fontSize: 24)),
-                    const SizedBox(width: 8),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Row(
                       children: [
-                        Text('Inicio', style: AppTextStyles.heading2),
-                        Text(
-                          'Wena, Mitchel ✌️',
-                          style: AppTextStyles.caption.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
+                        const Text('🏠', style: TextStyle(fontSize: 24)),
+                        const SizedBox(width: 8),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Inicio', style: AppTextStyles.heading2),
+                            Text(
+                              'Wena, Mitchel ✌️',
+                              style: AppTextStyles.caption.copyWith(
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: AppColors.borderDark,
+                          width: 2,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          const Text('🔥', style: TextStyle(fontSize: 14)),
+                          const SizedBox(width: 4),
+                          Text(
+                            '$currentStreak ${currentStreak == 1 ? 'día' : 'días'}',
+                            style: AppTextStyles.caption.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
+                const SizedBox(height: 20),
+
+                // Balance Card (ahora con datos reales)
+                BalanceCard(
+                  balance: monthBalance,
+                  income: monthIncome,
+                  expense: monthExpense,
+                ),
+                const SizedBox(height: 20),
+
+                // Pixel Cat Message
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
+                  padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: AppColors.borderDark, width: 2),
                   ),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('🔥', style: TextStyle(fontSize: 14)),
-                      const SizedBox(width: 4),
-                      Text(
-                        '5 días',
-                        style: AppTextStyles.caption.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.textPrimary,
-                        ),
+                      // Pixel cat emoji sin fondo
+                      const Text('🐱', style: TextStyle(fontSize: 32)),
+                      const SizedBox(width: 16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            '¡Empieza a ahorrar!',
+                            style: AppTextStyles.bodyBold.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          Text(
+                            'O ME VOY A MORIR 💀',
+                            style: AppTextStyles.caption.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
-            // Balance Card
-            const BalanceCard(balance: 27000, income: 30000, expense: 30000),
-            const SizedBox(height: 20),
-
-            // Pixel Cat Message
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.borderDark, width: 2),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Pixel cat emoji sin fondo
-                  const Text('🐱', style: TextStyle(fontSize: 32)),
-                  const SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        '¡Empieza a ahorrar!',
-                        style: AppTextStyles.bodyBold.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary,
+                // Action Buttons
+                ActionButton(
+                  label: 'GASTO',
+                  icon: Icons.remove,
+                  backgroundColor: AppColors.coral,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AddTransactionScreen(
+                          initialType: TransactionType.expense,
                         ),
                       ),
-                      Text(
-                        'O ME VOY A MORIR 💀',
-                        style: AppTextStyles.caption.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // Action Buttons
-            ActionButton(
-              label: 'GASTO',
-              icon: Icons.remove,
-              backgroundColor: AppColors.coral,
-              onPressed: () {
-                // TODO: Implementar navegación a agregar gasto
-              },
-            ),
-            const SizedBox(height: 12),
-            ActionButton(
-              label: 'INGRESO',
-              icon: Icons.add,
-              backgroundColor: AppColors.teal,
-              onPressed: () {
-                // TODO: Implementar navegación a agregar ingreso
-              },
-            ),
-            const SizedBox(height: 20),
-
-            // Budget Cards
-            Row(
-              children: [
-                BudgetCard(
-                  label: 'Presupuesto',
-                  icon: Icons.anchor,
-                  amount: 300000,
+                    );
+                  },
                 ),
-                const SizedBox(width: 12),
-                BudgetCard(
-                  label: 'Este mes',
-                  icon: Icons.calendar_today,
-                  subtitle: '2 movimientos',
+                const SizedBox(height: 12),
+                ActionButton(
+                  label: 'INGRESO',
+                  icon: Icons.add,
+                  backgroundColor: AppColors.teal,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AddTransactionScreen(
+                          initialType: TransactionType.income,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -235,7 +229,6 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: Icon(Icons.history),
               label: 'Historial',
             ),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
           ],
         ),
       ),
