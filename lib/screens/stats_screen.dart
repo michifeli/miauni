@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+import '../providers/transactions_provider.dart';
 import '../styles/colors.dart';
 import '../styles/text_styles.dart';
 
@@ -7,232 +10,273 @@ class StatsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Row(
-              children: [
-                const Text('📊', style: TextStyle(fontSize: 24)),
-                const SizedBox(width: 8),
-                Text('Estadísticas', style: AppTextStyles.heading2),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Text(
-              'diciembre 2025',
-              style: AppTextStyles.caption.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
-            const SizedBox(height: 20),
+    return Consumer<TransactionsProvider>(
+      builder: (context, provider, child) {
+        // Datos calculados desde el provider
+        final totalIncome = provider.totalIncome;
+        final totalExpense = provider.totalExpense;
+        final balance = provider.currentBalance;
+        final savingsRate = totalIncome > 0
+            ? ((balance / totalIncome) * 100).clamp(0.0, 100.0)
+            : 0.0;
 
-            // Estadísticas Cards - Top Row
-            Row(
-              children: [
-                Expanded(
-                  child: _StatCard(
-                    icon: Icons.trending_up,
-                    label: 'Ingresos',
-                    amount: 30000,
-                    color: AppColors.mintGreen,
-                    textColor: AppColors.darkGreen,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _StatCard(
-                    icon: Icons.trending_down,
-                    label: 'Gastos',
-                    amount: 3000,
-                    color: const Color(0xFFFEE2E2),
-                    textColor: AppColors.coral,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
+        // Gastos por categoría
+        final expensesByCategory = provider.getExpensesByCategory();
+        final sortedCategories = expensesByCategory.entries.toList()
+          ..sort((a, b) => b.value.compareTo(a.value));
 
-            // Estadísticas Cards - Bottom Row
-            Row(
-              children: [
-                Expanded(
-                  child: _StatCard(
-                    icon: Icons.savings,
-                    label: 'Ahorro',
-                    amount: 27000,
-                    color: const Color(0xFFDDEAFB),
-                    textColor: const Color(0xFF1E40AF),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _StatCard(
-                    icon: Icons.percent,
-                    label: 'Tasa ahorro',
-                    percentage: 90.0,
-                    color: const Color(0xFFE9D5FF),
-                    textColor: const Color(0xFF7C3AED),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 32),
+        // Mes actual para mostrar en el header
+        final now = DateTime.now();
+        final monthFormat = DateFormat('MMMM yyyy', 'es_ES');
+        final currentMonth = monthFormat.format(now);
 
-            // Gastos por Categoría
-            Row(
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('📊', style: TextStyle(fontSize: 18)),
-                const SizedBox(width: 8),
-                Text('Gastos por Categoría', style: AppTextStyles.heading3),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.borderDark, width: 2),
-              ),
-              child: Column(
-                children: [
-                  // Placeholder para el gráfico circular
-                  Container(
-                    width: 160,
-                    height: 160,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.borderDark, width: 2),
+                // Header
+                Row(
+                  children: [
+                    const Text('📊', style: TextStyle(fontSize: 24)),
+                    const SizedBox(width: 8),
+                    Text('Estadísticas', style: AppTextStyles.heading2),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  currentMonth,
+                  style: AppTextStyles.caption.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // Estadísticas Cards - Top Row (ahora con datos reales)
+                Row(
+                  children: [
+                    Expanded(
+                      child: _StatCard(
+                        icon: Icons.trending_up,
+                        label: 'Ingresos',
+                        amount: totalIncome,
+                        color: AppColors.mintGreen,
+                        textColor: AppColors.darkGreen,
+                      ),
                     ),
-                    child: Center(
-                      child: Text('📊', style: TextStyle(fontSize: 48)),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _StatCard(
+                        icon: Icons.trending_down,
+                        label: 'Gastos',
+                        amount: totalExpense,
+                        color: const Color(0xFFFEE2E2),
+                        textColor: AppColors.coral,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 24),
+                  ],
+                ),
+                const SizedBox(height: 12),
 
-                  // Lista de categorías
-                  _CategoryItem(
-                    emoji: '🎓',
-                    label: 'Estudios',
-                    amount: 35000,
-                    percentage: 34,
-                    color: AppColors.mintGreen,
-                  ),
-                  const SizedBox(height: 12),
-                  _CategoryItem(
-                    emoji: '🎉',
-                    label: 'Carrete',
-                    amount: 25000,
-                    percentage: 24,
-                    color: const Color(0xFFE9D5FF),
-                  ),
-                  const SizedBox(height: 12),
-                  _CategoryItem(
-                    emoji: '🍔',
-                    label: 'Comida',
-                    amount: 23500,
-                    percentage: 23,
-                    color: const Color(0xFFFEE2E2),
-                  ),
-                  const SizedBox(height: 12),
-                  _CategoryItem(
-                    emoji: '🍕',
-                    label: 'Delivery',
-                    amount: 12000,
-                    percentage: 12,
-                    color: const Color(0xFFFFDDB3),
-                  ),
-                  const SizedBox(height: 12),
-                  _CategoryItem(
-                    emoji: '🚌',
-                    label: 'Transporte',
-                    amount: 8500,
-                    percentage: 8,
-                    color: const Color(0xFFDDEAFB),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 32),
+                // Estadísticas Cards - Bottom Row (ahora con datos reales)
+                Row(
+                  children: [
+                    Expanded(
+                      child: _StatCard(
+                        icon: Icons.savings,
+                        label: 'Ahorro',
+                        amount: balance,
+                        color: const Color(0xFFDDEAFB),
+                        textColor: const Color(0xFF1E40AF),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _StatCard(
+                        icon: Icons.percent,
+                        label: 'Tasa ahorro',
+                        percentage: savingsRate,
+                        color: const Color(0xFFE9D5FF),
+                        textColor: const Color(0xFF7C3AED),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 32),
 
-            // Últimos 7 días
-            Row(
-              children: [
-                const Text('📈', style: TextStyle(fontSize: 18)),
-                const SizedBox(width: 8),
-                Text('Últimos 7 días', style: AppTextStyles.heading3),
+                // Gastos por Categoría (ahora con datos reales)
+                Row(
+                  children: [
+                    const Text('📊', style: TextStyle(fontSize: 18)),
+                    const SizedBox(width: 8),
+                    Text('Gastos por Categoría', style: AppTextStyles.heading3),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: AppColors.borderDark, width: 2),
+                  ),
+                  child: sortedCategories.isEmpty
+                      ? Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(32.0),
+                            child: Column(
+                              children: [
+                                const Text(
+                                  '📊',
+                                  style: TextStyle(fontSize: 48),
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'No hay gastos registrados',
+                                  style: AppTextStyles.caption.copyWith(
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : Column(
+                          children: [
+                            // Placeholder para el gráfico circular
+                            Container(
+                              width: 160,
+                              height: 160,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: AppColors.borderDark,
+                                  width: 2,
+                                ),
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  '📊',
+                                  style: TextStyle(fontSize: 48),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+
+                            // Lista de categorías (datos reales)
+                            ...sortedCategories.take(5).map((entry) {
+                              final percentage = totalExpense > 0
+                                  ? ((entry.value / totalExpense) * 100).round()
+                                  : 0;
+                              final colors = [
+                                AppColors.mintGreen,
+                                const Color(0xFFE9D5FF),
+                                const Color(0xFFFEE2E2),
+                                const Color(0xFFFFDDB3),
+                                const Color(0xFFDDEAFB),
+                              ];
+                              final colorIndex =
+                                  sortedCategories.indexOf(entry) %
+                                  colors.length;
+
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 12),
+                                child: _CategoryItem(
+                                  emoji: entry.key.split(' ')[0],
+                                  label: entry.key.split(' ').skip(1).join(' '),
+                                  amount: entry.value,
+                                  percentage: percentage,
+                                  color: colors[colorIndex],
+                                ),
+                              );
+                            }),
+                          ],
+                        ),
+                ),
+                const SizedBox(height: 32),
+
+                // Últimos 7 días
+                Row(
+                  children: [
+                    const Text('📈', style: TextStyle(fontSize: 18)),
+                    const SizedBox(width: 8),
+                    Text('Últimos 7 días', style: AppTextStyles.heading3),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  width: double.infinity,
+                  height: 200,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: AppColors.borderDark, width: 2),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('📈', style: TextStyle(fontSize: 48)),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Gráfico de últimos 7 días',
+                        style: AppTextStyles.caption.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 32),
+
+                // Metas de Ahorro (placeholder por ahora)
+                Row(
+                  children: [
+                    const Text('🎯', style: TextStyle(fontSize: 18)),
+                    const SizedBox(width: 8),
+                    Text('Metas de Ahorro', style: AppTextStyles.heading3),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFFBEB),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: AppColors.borderDark, width: 2),
+                  ),
+                  child: Column(
+                    children: [
+                      // Por ahora, metas hardcodeadas. En el futuro, esto podría venir de otro servicio
+                      _SavingsGoalItem(
+                        label: 'Fondo de emergencia',
+                        current: balance > 0 ? balance * 0.45 : 0,
+                        goal: 100000,
+                        percentage: balance > 0
+                            ? ((balance * 0.45 / 100000) * 100).round()
+                            : 0,
+                      ),
+                      const SizedBox(height: 20),
+                      _SavingsGoalItem(
+                        label: 'Viaje de verano',
+                        current: balance > 0 ? balance * 0.32 : 0,
+                        goal: 100000,
+                        percentage: balance > 0
+                            ? ((balance * 0.32 / 100000) * 100).round()
+                            : 0,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
               ],
             ),
-            const SizedBox(height: 16),
-            Container(
-              width: double.infinity,
-              height: 200,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.borderDark, width: 2),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('📈', style: TextStyle(fontSize: 48)),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Gráfico de últimos 7 días',
-                    style: AppTextStyles.caption.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 32),
-
-            // Metas de Ahorro
-            Row(
-              children: [
-                const Text('🎯', style: TextStyle(fontSize: 18)),
-                const SizedBox(width: 8),
-                Text('Metas de Ahorro', style: AppTextStyles.heading3),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFFFBEB),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.borderDark, width: 2),
-              ),
-              child: Column(
-                children: [
-                  _SavingsGoalItem(
-                    label: 'Fondo de emergencia',
-                    current: 45000,
-                    goal: 100000,
-                    percentage: 45,
-                  ),
-                  const SizedBox(height: 20),
-                  _SavingsGoalItem(
-                    label: 'Viaje de verano',
-                    current: 32000,
-                    goal: 100000,
-                    percentage: 32,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
