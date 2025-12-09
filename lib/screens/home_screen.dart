@@ -5,6 +5,7 @@ import '../widgets/balance_card.dart';
 import '../widgets/action_button.dart';
 import '../widgets/budget_card.dart';
 import 'stats_screen.dart';
+import 'history_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case 1:
         return const StatsScreen();
       case 2:
-        return _buildPlaceholderScreen('Historial', '📋');
+        return const HistoryScreen();
       case 3:
         return _buildPlaceholderScreen('Perfil', '👤');
       default:
@@ -52,140 +53,142 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHomeContent() {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Wena',
-                    style: AppTextStyles.caption.copyWith(
-                      color: AppColors.textSecondary,
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const Text('🏠', style: TextStyle(fontSize: 24)),
+                    const SizedBox(width: 8),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Inicio', style: AppTextStyles.heading2),
+                        Text(
+                          'Wena, Mitchel ✌️',
+                          style: AppTextStyles.caption.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
                     ),
+                  ],
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
                   ),
-                  Row(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: AppColors.borderDark, width: 2),
+                  ),
+                  child: Row(
                     children: [
-                      Text('Mitchel', style: AppTextStyles.heading2),
+                      const Text('🔥', style: TextStyle(fontSize: 14)),
                       const SizedBox(width: 4),
-                      const Text('✌️', style: TextStyle(fontSize: 20)),
+                      Text(
+                        '5 días',
+                        style: AppTextStyles.caption.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            // Balance Card
+            const BalanceCard(balance: 27000, income: 30000, expense: 30000),
+            const SizedBox(height: 20),
+
+            // Pixel Cat Message
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.borderDark, width: 2),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Pixel cat emoji sin fondo
+                  const Text('🐱', style: TextStyle(fontSize: 32)),
+                  const SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        '¡Empieza a ahorrar!',
+                        style: AppTextStyles.bodyBold.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      Text(
+                        'O ME VOY A MORIR 💀',
+                        style: AppTextStyles.caption.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
                     ],
                   ),
                 ],
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: AppColors.borderDark, width: 2),
-                ),
-                child: Row(
-                  children: [
-                    const Text('🔥', style: TextStyle(fontSize: 14)),
-                    const SizedBox(width: 4),
-                    Text(
-                      '5 días',
-                      style: AppTextStyles.caption.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
-
-          // Balance Card
-          const BalanceCard(balance: 27000, income: 30000, expense: 30000),
-          const SizedBox(height: 24),
-
-          // Pixel Cat Message
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.borderDark, width: 2),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            const SizedBox(height: 20),
+
+            // Action Buttons
+            ActionButton(
+              label: 'GASTO',
+              icon: Icons.remove,
+              backgroundColor: AppColors.coral,
+              onPressed: () {
+                // TODO: Implementar navegación a agregar gasto
+              },
+            ),
+            const SizedBox(height: 12),
+            ActionButton(
+              label: 'INGRESO',
+              icon: Icons.add,
+              backgroundColor: AppColors.teal,
+              onPressed: () {
+                // TODO: Implementar navegación a agregar ingreso
+              },
+            ),
+            const SizedBox(height: 20),
+
+            // Budget Cards
+            Row(
               children: [
-                // Pixel cat emoji sin fondo
-                const Text('🐱', style: TextStyle(fontSize: 40)),
-                const SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      '¡Empieza a ahorrar!',
-                      style: AppTextStyles.bodyBold.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    Text(
-                      'O ME VOY A MORIR 💀',
-                      style: AppTextStyles.caption.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                  ],
+                BudgetCard(
+                  label: 'Presupuesto',
+                  icon: Icons.anchor,
+                  amount: 300000,
+                ),
+                const SizedBox(width: 12),
+                BudgetCard(
+                  label: 'Este mes',
+                  icon: Icons.calendar_today,
+                  subtitle: '2 movimientos',
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: 24),
-
-          // Action Buttons
-          ActionButton(
-            label: 'GASTO',
-            icon: Icons.remove,
-            backgroundColor: AppColors.coral,
-            onPressed: () {
-              // TODO: Implementar navegación a agregar gasto
-            },
-          ),
-          const SizedBox(height: 12),
-          ActionButton(
-            label: 'INGRESO',
-            icon: Icons.add,
-            backgroundColor: AppColors.teal,
-            onPressed: () {
-              // TODO: Implementar navegación a agregar ingreso
-            },
-          ),
-          const SizedBox(height: 24),
-
-          // Budget Cards
-          Row(
-            children: [
-              BudgetCard(
-                label: 'Presupuesto',
-                icon: Icons.anchor,
-                amount: 300000,
-              ),
-              const SizedBox(width: 12),
-              BudgetCard(
-                label: 'Este mes',
-                icon: Icons.calendar_today,
-                subtitle: '2 movimientos',
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
